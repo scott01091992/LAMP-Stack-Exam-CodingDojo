@@ -64,38 +64,68 @@ class Exam extends CI_Controller {
 		$month = Date('m');
 		$year = Date('Y');
 		if($pass==true){
-			if(intval($year) < intval($start[2])){
+			//is the current year greater than the year they want to go?
+			if(intval($year) > intval($start[2])){
 				echo 'start date before year';
 				$pass = false;
-			}else if(intval($month) > intval($start[0])){
-				echo 'start date before month';
-				$pass = false;
-			}else if(intval($day) < intval($start[1])){
-				echo 'start date before day';
-				$pass = false;
-			}else{
-				if(intval($start[2]) > intval($end[2])){
-					echo 'end date before start date1';
-					echo $end[2];
-					echo $start[2];
+			//are they going this year?
+			}else if(intval($year) == intval($start[2]){
+				//is this month greater than they month they are going?
+				if(intval($month) > intval($start[0])){
+					echo 'start date before month';
 					$pass = false;
-				}else if(intval($start[0]) > intval($end[0])){
-					echo 'end date before start date2';
-					$pass = false;
-				}else if(intval($start[0]) == intval($end[0])){
-					if(intval($start[1]) > intval($end[1])){
+				//are they going this month?
+				else if(intval($month) == intval($start)){
+					//is today greater the day they want to go?
+					if(intval($day) > intval($start[1])){
+						echo 'start date before day';
 						$pass = false;
 					}
+					//they are going on a future day
 					else{
 						$pass = true;
 					}
+				}
+				//they are going in a future month
+				}else{
+					$pass = true;
+				} 
+			//they are going in a future year
+			}else{
+				$pass = true;
+			}
+		}
+		//if the start date was a future date, check if the end date is > start date
+		if($pass == true){
+			//is the start year greater than the end year?
+			if(intval($start[2]) > intval($end[2])){
+				echo 'end date before start date1';
+				$pass = false;
+			//is the start year the same as the end year?
+			}else if(intval($start[2]) == intval($end[2])){
+				//is the start month greater than the end month?
+				if(intval($start[0]) > intval($end[0])){
+						echo 'end date before start date2';
+						$pass = false;
+				//is the start month the same as the end month?
+				}else if(intval($start[0]) == intval($end[0])){
+					//is the start day greater than the end day?
+					if(intval($start[1]) > intval($end[1])){
+						$pass = false;
+					}
+					//end day is after start day
+					else{
+						$pass = true;
+					}
+				//end month is greater than start month
 				}else{
 					$pass = true;
 				}
-				
+			//end year is greater than start year
+			}else{
+				$pass = true;
 			}	
-			
-			}
+		}
 			if($this->form_validation->run() == false){
 				$this->load->view('add_plan');
 			}else if($pass == false){
